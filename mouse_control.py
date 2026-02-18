@@ -83,3 +83,40 @@ class MouseController:
             pyautogui.scroll(int(config.SCROLL_SPEED))
         else:
             pyautogui.scroll(int(-config.SCROLL_SPEED))
+
+    def change_volume(self, steps):
+        """
+        Adjusts volume based on vertical movement.
+        """
+        if steps > 0:
+            pyautogui.press('volumeup')
+        else:
+            pyautogui.press('volumedown')
+
+    def seek_media(self, steps):
+        """
+        Seeks media (Forward/Backward) based on horizontal movement.
+        """
+        if steps > 0:
+            pyautogui.press('right')
+        else:
+            pyautogui.press('left')
+            
+    # --- Discrete Media Controls ---
+    def volume_up(self):
+        pyautogui.press('volumeup')
+        
+    def volume_down(self):
+        pyautogui.press('volumedown')
+        
+    def seek_forward(self):
+        # 'right' is universal: Skips 5s on YouTube, variable on local players
+        pyautogui.press('right')
+        
+    def seek_backward(self):
+        # 'left' is universal: Rewinds 5s on YouTube, variable on local players
+        pyautogui.press('left')
+
+    def toggle_play_pause(self):
+        # 'space' is the standard Play/Pause for almost all players (VLC, YT, etc.)
+        pyautogui.press('space')

@@ -13,6 +13,8 @@ class GestureClassifier:
     - CLICK_PENDING: Pinch detected, accumulating confidence
     - CLICK: Pinch confirmed
     - DRAG: Pinch held + movement (Future)
+    - VOLUME: Pinky Up (Volume Control)
+    - SEEK: Thumb Up (Media Control)
     """
     def __init__(self):
         self.state = "IDLE"
@@ -95,14 +97,16 @@ class GestureClassifier:
         # Index (8), Middle (12), Ring (16), Pinky (20)
         # Compare Tip Y to Pip Y (6, 10, 14, 18)
         for i, tip_idx in enumerate([8, 12, 16, 20]):
-            pip_idx = tip_idx - 2
-            fingers_up[i+1] = landmarks[tip_idx].y < landmarks[pip_idx].y 
+            pip_idx = tip_idx - 2 # PIP Joint
+            # Check if Tip is above PIP (y is smaller at top)
+            fingers_up[i+1] = landmarks[tip_idx].y < landmarks[pip_idx].y
             
         # Thumb (4): Check distance to index MCP(5)? Or just "Out"?
         # If thumb tip is far from index mcp, it's open.
         thumb_tip = landmarks[4]
         index_mcp = landmarks[5]
-        thumb_out = math.hypot(thumb_tip.x - index_mcp.x, thumb_tip.y - index_mcp.y) > 0.05
+        # Increased threshold slightly for better accuracy
+        thumb_out = math.hypot(thumb_tip.x - index_mcp.x, thumb_tip.y - index_mcp.y) > 0.06
         fingers_up[0] = thumb_out
         
         # 2. Key Gestures
@@ -116,6 +120,12 @@ class GestureClassifier:
         
         # C. PEACE (Scroll)
         is_peace = fingers_up[1] and fingers_up[2] and not fingers_up[3] and not fingers_up[4] # I, M UP. R, P DOWN.
+
+        # D. VOLUME (Pinky Only)
+        is_pinky_only = fingers_up[4] and not any(fingers_up[1:4]) # Pinky UP, others DOWN. Thumb ignored (can be in).
+
+        # E. SEEK (Thumb Only - Hitchhiker)
+        is_thumb_only = fingers_up[0] and not any(fingers_up[1:]) # Thumb UP, others DOWN.
         
         # D. PINCHES
         # Index Pinch
@@ -128,7 +138,7 @@ class GestureClassifier:
         
         # 3. State Determination
         
-        # Priority: PINCH > SCROLL > FIST > PALM > IDLE
+        # Priority: PINCH > SCROLL/VOL/SEEK > FIST > PALM > IDLE
         
         if is_pinch_index:
             self.state = "CLICK_LEFT"
@@ -137,6 +147,10 @@ class GestureClassifier:
             self.state = "CLICK_RIGHT"
         elif is_peace:
             self.state = "SCROLL"
+        elif is_pinky_only:
+            self.state = "VOLUME"
+        elif is_thumb_only:
+            self.state = "SEEK"
         elif is_fist:
             self.state = "FIST"
         elif is_palm:

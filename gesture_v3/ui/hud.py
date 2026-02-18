@@ -77,6 +77,16 @@ class CinematicHUD:
              # Draw arrows
              cv2.arrowedLine(img, (cx, cy - 20), (cx, cy - 60), color, 2)
              cv2.arrowedLine(img, (cx, cy + 20), (cx, cy + 60), color, 2)
+        
+        elif state == "VOLUME":
+             color = config.COLOR_VOLUME
+             radius = 40
+             cv2.putText(img, "VOL", (cx-20, cy+5), cv2.FONT_HERSHEY_PLAIN, 1.5, color, 2)
+
+        elif state == "SEEK":
+             color = config.COLOR_SEEK
+             radius = 40
+             cv2.putText(img, "SEEK", (cx-25, cy+5), cv2.FONT_HERSHEY_PLAIN, 1.5, color, 2)
 
         # Main Arc
         cv2.ellipse(img, (cx, cy), (radius, radius), 

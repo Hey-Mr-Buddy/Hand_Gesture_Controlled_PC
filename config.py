@@ -25,6 +25,7 @@ SMOOTHING_SPEED_THRESHOLD = 150 # Pixel distance to trigger max responsiveness
 CLICK_DISTANCE_THRESHOLD = 60  # Increased further to improve Left Click detection
 CLICK_HOLD_TIME = 0.2  # Reduced for faster clicking
 PAUSE_HOLD_TIME = 1.0 # Seconds to hold fist to pause (optional, or immediate)
+GESTURE_EXTENSION_THRESHOLD = 50 # Pixel distance to consider a finger "Pointing"
 GESTURE_TIMEOUT = 0.2 # Time to wait before resetting gesture state
 
 # Version 2 Settings
@@ -41,6 +42,10 @@ COLOR_HAND_POINTS = (0, 255, 0)
 COLOR_HAND_LINES = (0, 255, 0)
 COLOR_ACTIVE = (0, 255, 0) # Green
 COLOR_SCROLL = (255, 255, 0) # Cyan/Yellowish
+COLOR_VOLUME = (255, 165, 0) # Orange
+COLOR_FWD = (0, 255, 255) # Gold/Yellow
+COLOR_BWD = (0, 128, 255) # Orange
+COLOR_SEEK = (255, 0, 255) # Magenta
 COLOR_PAUSED = (0, 0, 255) # Red
 COLOR_TEXT = (255, 255, 255)
 UI_FONT = cv2.FONT_HERSHEY_SIMPLEX

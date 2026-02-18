@@ -6,9 +6,9 @@ import math
 import pyautogui
 
 # --- SYSTEM ---
-APP_NAME = "J.A.R.V.I.S Gesture Interface"
+APP_NAME = "Capstone Project - My Gesture Controller" 
 WINDOW_WIDTH, WINDOW_HEIGHT = pyautogui.size()
-TARGET_FPS = 60
+TARGET_FPS = 60 
 
 # --- PERCEPTION (OneEuroFilter) ---
 # Low-jitter smoothing parameters
@@ -41,6 +41,10 @@ CLICK_COOLDOWN = 0.4
 SCROLL_SPEED = 20
 SCROLL_DEADZONE = 0.05
 
+# Volume & Seek
+VOL_SENSITIVITY = 0.015  # Sensitivity for volume gestures
+SEEK_SENSITIVITY = 0.01 # Sensitivity for seek gestures
+
 # Drag (Toggle)
 DRAG_TOGGLE_COOLDOWN = 1.0 # Prevent double-toggle
 COLOR_DRAG_ACTIVE = (0, 255, 0) # Green (Locked)
@@ -51,6 +55,8 @@ COLOR_MOVE = (255, 255, 255)    # White (Open Palm)
 COLOR_CLICK = (0, 0, 255)       # Red
 COLOR_RIGHT_CLICK = (255, 0, 0) # Blue
 COLOR_SCROLL = (255, 0, 255)    # Magenta
+COLOR_VOLUME = (255, 165, 0)    # Orange
+COLOR_SEEK = (255, 255, 0)      # Yellow
 COLOR_TEXT = (255, 255, 255)
 
 # --- SAFETY ---

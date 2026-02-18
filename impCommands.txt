@@ -1,0 +1,10 @@
+echo __pycache__/ > .gitignore
+echo *.pyc >> .gitignore
+
+git rm -r --cached __pycache__                  // to remove cache folder
+
+git commit -m "Remove __pycache__ from repo"
+
+git push origin main --force
+
+git status

@@ -1,6 +1,7 @@
 
 import cv2
 import time
+import pyautogui
 from gesture_v3 import config
 from gesture_v3.perception.tracker import HandTracker
 
@@ -23,7 +24,8 @@ class SystemController:
         self.start_time = time.time()
         
     def run(self):
-        print(f"[{config.APP_NAME}] System Initialized. Press 'Q' to Quit.")
+        print(f"[{config.APP_NAME}] System Initialized!") # Change startup text
+        print(f"[{config.APP_NAME}] Command 'Ctrl + C' in terminal to exit.")
         
         # Initialize Subsystems
         from gesture_v3.perception.smoothing import OneEuroFilter
@@ -94,6 +96,7 @@ class SystemController:
                 
                 # 4. Intent Classification
                 state, meta = classifier.process(hand_landmarks)
+                print(f">> GESTURE: {state}") # Change terminal log text here
                 # Store raw state because we might override it for HUD
                 raw_state = state 
                 confidence = meta.get("confidence", 0.0)
@@ -113,10 +116,8 @@ class SystemController:
                         self.last_toggle_time = current_time_loop
                         
                         if self.drag_active:
-                            import pyautogui
                             pyautogui.mouseDown() # PICK
                         else:
-                            import pyautogui
                             pyautogui.mouseUp()   # DROP
                             
                 # 2. EXECUTE ACTIONS BASED ON STATE & TOGGLE
@@ -136,14 +137,12 @@ class SystemController:
                         
                     elif state == "CLICK_LEFT":
                         if (current_time_loop - self.last_click_time) > config.CLICK_COOLDOWN:
-                             import pyautogui
                              pyautogui.click()
                              self.last_click_time = current_time_loop
                              cv2.circle(img, (int(norm_x*config.WINDOW_WIDTH), int(norm_y*config.WINDOW_HEIGHT)), 50, config.COLOR_CLICK, 4)
                              
                     elif state == "CLICK_RIGHT":
                         if (current_time_loop - self.last_click_time) > config.CLICK_COOLDOWN: 
-                             import pyautogui
                              pyautogui.rightClick()
                              self.last_click_time = current_time_loop
                              
@@ -151,12 +150,58 @@ class SystemController:
                         if hasattr(self, 'last_scroll_y'):
                              dy = norm_y - self.last_scroll_y
                              if abs(dy) > 0.005: 
-                                 import pyautogui
                                  scroll_amount = int(-dy * config.SCROLL_SPEED * 100)
                                  pyautogui.scroll(scroll_amount)
                         self.last_scroll_y = norm_y
+
+                    elif state == "VOLUME":
+                        if not hasattr(self, 'vol_accum_y'): self.vol_accum_y = 0.0
+
+                        if hasattr(self, 'last_vol_y'):
+                            dy = norm_y - self.last_vol_y
+                            self.vol_accum_y += dy
+                            
+                            while abs(self.vol_accum_y) > config.VOL_SENSITIVITY:
+                                if self.vol_accum_y > 0: 
+                                    pyautogui.press('down') # Volume Down
+                                    self.vol_accum_y -= config.VOL_SENSITIVITY
+                                else: 
+                                    pyautogui.press('up') # Volume Up
+                                    self.vol_accum_y += config.VOL_SENSITIVITY
+                                time.sleep(0.02) # Rate limit for smoothness
+                        self.last_vol_y = norm_y
+
+                    elif state == "SEEK":
+                        print(">> SEEKING VIDEO...") # Change specific action logs
+                        if not hasattr(self, 'seek_accum_x'): self.seek_accum_x = 0.0
+                        
+                        if hasattr(self, 'last_seek_x'):
+                            dx = norm_x - self.last_seek_x
+                            self.seek_accum_x += dx
+                            # print(f"DX: {dx:.5f} ACCUM: {self.seek_accum_x:.5f}") # Debug
+
+                            while abs(self.seek_accum_x) > config.SEEK_SENSITIVITY:
+                                if self.seek_accum_x > 0: 
+                                    pyautogui.keyDown('right')
+                                    pyautogui.keyUp('right')
+                                    print(">> SKIPPING FORWARD")
+                                    self.seek_accum_x -= config.SEEK_SENSITIVITY
+                                else: 
+                                    pyautogui.keyDown('left')
+                                    pyautogui.keyUp('left')
+                                    print(">> REWINDING")
+                                    self.seek_accum_x += config.SEEK_SENSITIVITY
+                                time.sleep(0.05) # Small delay for YouTube to register
+                        self.last_seek_x = norm_x
+
                     else:
                         if hasattr(self, 'last_scroll_y'): del self.last_scroll_y
+                        if hasattr(self, 'last_vol_y'): 
+                            del self.last_vol_y
+                            if hasattr(self, 'vol_accum_y'): del self.vol_accum_y
+                        if hasattr(self, 'last_seek_x'): 
+                            del self.last_seek_x
+                            if hasattr(self, 'seek_accum_x'): del self.seek_accum_x
 
                 # 5. UI Layer
                 hud.draw(img, hand_landmarks, state, confidence)
@@ -164,7 +209,6 @@ class SystemController:
             else:
                 # HAND LOST SAFETY
                 if hasattr(self, 'drag_active') and self.drag_active:
-                    import pyautogui
                     pyautogui.mouseUp()
                     self.drag_active = False
                     print("Hand lost. Safety Drop.")
@@ -182,7 +226,7 @@ class SystemController:
 
             # 7. System Info
             fps = 1/dt if dt > 0 else 0
-            cv2.putText(img, f"J.A.R.V.I.S  |  FPS: {int(fps)}", (20, 30), cv2.FONT_HERSHEY_PLAIN, 1, (200, 255, 200), 1)
+            cv2.putText(img, f"MY SYSTEM  |  FPS: {int(fps)}", (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (200, 255, 200), 2)
 
             # 8. Display
             cv2.imshow(config.APP_NAME, img)

@@ -62,6 +62,36 @@ class GestureRecognizer:
         if dist_mid < config.CLICK_DISTANCE_THRESHOLD:
              return "RIGHT_CLICK", {"distance": dist_mid}
 
+        # --- DIRECTIONAL GESTURES (Video Control) ---
+        # Analyzed before general state to allow "Pointing" to override "Move" if clearly horizontal
+        
+        ind_tip = lm_list[8]
+        ind_mcp = lm_list[5]
+        dx_ind = ind_tip[1] - ind_mcp[1]
+        dy_ind = ind_tip[2] - ind_mcp[2]
+        dist_ind = math.hypot(dx_ind, dy_ind)
+
+        thumb_tip = lm_list[4]
+        thumb_mcp = lm_list[2]
+        dx_thumb = thumb_tip[1] - thumb_mcp[1]
+        dy_thumb = thumb_tip[2] - thumb_mcp[2]
+        dist_thumb = math.hypot(dx_thumb, dy_thumb)
+
+        # 1. Index Finger Gestures (Forward, Backward, Vol Down)
+        if dist_ind > config.GESTURE_EXTENSION_THRESHOLD:
+            if abs(dx_ind) > abs(dy_ind): # Horizontal
+                if dx_ind > 0: return "VID_FWD", {}   # Pointing Right
+                else: return "VID_BWD", {}            # Pointing Left
+            elif dy_ind > 0: # Vertical Down (Index pointing down)
+                return "VOL_DOWN", {}
+
+        # 2. Thumb Gestures (Vol Up)
+        # Only if Index is NOT Up (to avoid conflict with Move)
+        if fingers[0] == 0: # Index is Down
+             if dist_thumb > config.GESTURE_EXTENSION_THRESHOLD:
+                 if abs(dy_thumb) > abs(dx_thumb) and dy_thumb < 0: # Vertical Up
+                     return "VOL_UP", {}
+
         # --- STATE GESTURES ---
 
         # PAUSE: All fingers down (Fist)
@@ -76,6 +106,14 @@ class GestureRecognizer:
             # To avoid confusion with specific pinch gestures, ensure thumb is somewhat away?
             # Or just accept [1,1,0,0] as Scroll mode trigger.
             return "SCROLL", {}
+
+        # VOLUME MODE: Pinky UP, others DOWN
+        if fingers == [0, 0, 0, 1]:
+            return "VOLUME", {}
+
+        # SEEK MODE: Index + Middle + Ring UP (Pinky ignored)
+        if fingers[0] == 1 and fingers[1] == 1 and fingers[2] == 1:
+            return "SEEK", {}
 
         # MOVE: Only Index Finger Up
         if fingers == [1, 0, 0, 0]:
