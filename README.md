@@ -1,7 +1,5 @@
 # Hand Gesture Control SyRED, Text says "PAUSED".
 
-### 6. **QUIT**stem V1
-
 A software-only solution to control your PC mouse using hand gestures via a webcam. Built with Python, OpenCV, and MediaPipe.
 
 ## Features (Version 2)
