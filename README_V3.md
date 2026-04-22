@@ -1,4 +1,5 @@
-# Project J.A.R.V.I.S (Gesture Interface V3)
+# (Gesture Interface V3)
+## Developer Notes
 
 > "I am not controlling a computer. The computer understands my intent."
 
