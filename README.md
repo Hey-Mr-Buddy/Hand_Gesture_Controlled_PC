@@ -1,4 +1,4 @@
-# Hand Gesture Control SyRED, Text says "PAUSED".
+# Hand Gesture Control, Text says "PAUSED".
 
 A software-only solution to control your PC mouse using hand gestures via a webcam. Built with Python, OpenCV, and MediaPipe.
 
@@ -11,7 +11,6 @@ A software-only solution to control your PC mouse using hand gestures via a webc
     -   **Right Click**: Thumb + Middle Pinch.
     -   **Left Click**: Thumb + Index Pinch.
 -   **Advanced Safety**:
-    -   **Global Kill Switch ('Q')**.
     -   **Auto-Pause**: Activates on hand loss or low FPS.
     -   **Cooldowns**: Prevents accidental double-clicks.
 -   **Visual Dashboard**:
@@ -71,7 +70,6 @@ A software-only solution to control your PC mouse using hand gestures via a webc
 *   **Pattern**: Make a **Closed Fist**.
 *   **Action**: Pauses all system control immediately.
 *   **Visual**: Screen border turns 
-*   **Pattern**: Press **'Q'** on your keyboard.
 *   **Action**: Safery shutdown of the application.
 
 ## Configuration
@@ -81,7 +79,6 @@ Tweak `config.py`:
 -   `SMOOTHING_FACTOR`: Cursor stability.
 
 ## Version 3 Roadmap (Future)
--   **Voice Control**: "Computer, open browser".
 -   **Keyboard Input**: Air-typing interface.
 -   **Custom Gestures**: ML Training for user-defined signaling.
 
