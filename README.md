@@ -66,6 +66,14 @@ A software-only solution to control your PC mouse using hand gestures via a webc
     *   Move Hand **DOWN** -> Scroll Page DOWN.
 *   **Exit**: Lower your middle finger to return to cursor control.
 
+### 5. **MEDIA CONTROL (YouTube)** 
+*   **Pattern**: **Extend Thumb** ONLY (Thumbs Up/Down/Side); all other fingers must be tightly curled.
+*   **Actions**:
+    * Extend Thumb **UP** -> Increase Volume.
+    * Extend Thumb **DOWN** -> Decrease Volume.
+    * Extend Thumb **Right** -> Seek Forward (Playback -5s).
+    * Extend Thumb **Left** -> Seek Backward (Playback +5s).
+
 ### 5. **PAUSE / SAFETY**
 *   **Pattern**: Make a **Closed Fist**.
 *   **Action**: Pauses all system control immediately.
