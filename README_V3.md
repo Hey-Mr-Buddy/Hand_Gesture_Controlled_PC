@@ -30,7 +30,6 @@ A production-grade, sci-fi inspired hand gesture interface featuring physics-bas
 -   **Move**: Raise your hand. The cursor follows your **Index Finger** with physics.
 -   **Left Click**: Pinch **Thumb + Index**.
     -   *Visual*: The HUD Reticle will shrink and turn Orange (Pending) -> Red (Click).
--   **Quit**: Press **'Q'**.
 
 ## Architecture (For Developers)
 -   `core/`: System loop and State management.
@@ -39,5 +38,3 @@ A production-grade, sci-fi inspired hand gesture interface featuring physics-bas
 -   `control/`: Physics Engine (Mass/Friction).
 -   `ui/`: OpenCV Drawing (HUD).
 
----
-*Senior HCI Engineering Project*
